@@ -1,0 +1,55 @@
+
+The below solution i have writen in Oracle SQL due to GCP account got expire.
+
+Write a query to pull back the most recent redemption count, by redemption date, for the date
+range 2023-10-30 to 2023-11-05, for retailer "ABC Store". Your result should have 2 columns
+and 7 rows (one row per day in the date range). Provide the query and then using your query
+result, provide answers to the following questions.
+
+
+create table helper_table as (
+select cte2.redemptionDate,cte2.redemptionCount from 
+    (select * from tblRedemptionsByDay 
+	      where createDateTime >= to_timestamp('2023-10-30','YYYY-MM-DD') 
+					and 
+		       createDateTime <=to_timestamp('2023-11-06','YYYY-MM-DD')) cte2  
+    inner join (
+	   select id,RETAILERNAME from tblRetailers where retailerName ='ABC Store') cte
+on cte2.retailerId = cte.id
+    )
+select * from helper_table
+
+Explanation
+===========
+
+I have store the 7 days of data in helper_table that i will use to derive the below questions.
+
+
+1. Which date had the least number of redemptions and what was the redemption count?
+
+select * from helper_table where redemptionCount= (select min(redemptionCount)  from helper_table)
+
+2. Which date had the most number of redemptions and what was the redemption count?
+select * from helper_table where redemptionCount= (select max(redemptionCount)  from helper_table)
+
+3. What was the createDateTime for each redemptionCount in questions 1 and 2?
+
+select REDEMPTIONDATE,REDEMPTIONCOUNT,CREATEDATETIME from tblRedemptionsByDay where REDEMPTIONCOUNT in (select REDEMPTIONCOUNT from (
+select REDEMPTIONDATE,REDEMPTIONCOUNT from helper_table where redemptionCount= (select min(redemptionCount)  from helper_table)
+union
+select REDEMPTIONDATE,REDEMPTIONCOUNT from helper_table where redemptionCount= (select max(redemptionCount)  from helper_table)
+))
+
+Explanation
+===========
+I have union the solution 1 and solution 2 then am comparing the REDEMPTIONCOUNT.
+
+4. Is there another method you can use to pull back the most recent redemption count, by
+redemption date, for the date range 2023-10-30 to 2023-11-05, for retailer "ABC Store"?
+In words, describe how you would do this (no need to write a query, unless you’d like to).
+
+Solution
+========
+Above i have wrote the solution using subquery the other approch i can use is to write as a CTE so its more readable and we can reuse also.
+
+
