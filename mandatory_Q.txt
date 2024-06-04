@@ -1,0 +1,90 @@
+Question #1) Given the Employee table below, Write a SQL query to fetch the count of
+employees by department with counts sorted in descending order.
+
+select department,count(*) as emp_count from Employee
+group by emp_count desc
+
+
+Q2
+======
+create table products(id int,UnitPrice int,DepartmentID int);
+insert into products values(10, 1000, 2);
+insert into products values(20, 5000, 3);
+insert into products values(30, 3000, 2);
+
+select * from products
+
+create table Department(ID int, DepartmentName varchar(30));
+insert into Department values(1, 'Toys');
+insert into Department values(2, 'Furniture');
+insert into Department values(3, 'Hardware');
+
+select * from Department
+
+with cte as(
+select DepartmentID,max(UnitPrice) as mx_unit_price_by_dept from products
+group by DepartmentID
+)
+select dept.DepartmentName,cte.mx_unit_price_by_dept from cte inner join Department dept
+on cte.DepartmentID = dept.id
+
+
+Q3
+===
+import csv
+
+total_amount = 0
+trans_count = 0
+
+with open('transactions.csv', 'r') as file:
+    reader = csv.DictReader(file)
+    for row in reader:
+        
+        total_amount += float(row['TransactionAmount'])
+        trans_count += 1
+
+
+if trans_count > 0:
+    average_amount = total_amount / trans_count
+else:
+    average_amount = 0
+
+print(f"The avg transaction amount is: {average_amount}")
+
+
+
+Q4
+====
+lst = [1, 2, 3, 4]
+result = []
+for element in lst:
+    result.append(element*element)
+print(result)
+
+Q5
+==
+def duplicates_array_check_helperFn(nums):
+    return len(nums) != len(set(nums))
+
+
+nums = [11, 23, 43, 34, 54]
+print(duplicates_array_check_helperFn(nums))  
+
+nums = [11, 23, 43, 23, 54]
+print(duplicates_array_check_helperFn(nums)) 
+
+Q6
+===
+def calcSumOfSquares(n: List[Int]): Int = {
+    var sum = 0
+    for (num <- n) {
+      val square = num * num
+      sum += square
+    }
+    sum
+  }
+
+Note:
+Function bracket should be close.
+We have to define the varibale type of square varibale in our case we can define val or var.
+
